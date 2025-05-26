@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - QuizzApp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+		body {
+		     background-color: #eef2ff;
+		     font-family: 'Segoe UI', sans-serif;
+		     display: flex;
+		     align-items: center;
+		     justify-content: center;
+		     height: 100vh;
+		   }
+
+		   .card {
+		     width: 100%;
+		     max-width: 400px;
+		     padding: 30px;
+		     border-radius: 16px;
+		     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+		   }
+
+		   .btn {
+		     width: 100%;
+		   }
+    </style>
+</head>
+<body>
+
+	<div class="card">
+		  <h3 class="text-center mb-4">Admin Register</h3>
+
+		  <form action="/adminregister" method="post">
+
+		    <input type="hidden" id="roleInput" name="role" value="USER" />
+
+		    <div class="mb-3">
+		      <label for="username" class="form-label">Username</label>
+		      <input required type="text" class="form-control" id="username" name="username" />
+		    </div>
+
+		    <div class="mb-3">
+		      <label for="email" class="form-label">Email</label>
+		      <input required type="email" class="form-control" id="email" name="email" />
+		    </div>
+
+		    <div class="mb-3">
+		      <label for="password" class="form-label">Password</label>
+		      <input required type="password" class="form-control" id="password" name="password" />
+		    </div>
+
+		    <button type="submit" class="btn btn-primary">Register</button>
+		  </form>
+
+		  <a href="/login" class="login-link">Already have an account? Login</a>
+		</div>
+	<div th:if="${error}" class="alert alert-danger" role="alert">
+	    <span th:text="${error}"></span>
+	</div>
+
+</body>
+</html>

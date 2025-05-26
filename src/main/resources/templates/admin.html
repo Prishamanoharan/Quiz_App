@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz App Admin Dashboard</title>
+  <style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h1, h2 {
+    text-align: center;
+  }
+
+  form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  input[type="text"],
+  textarea,
+  select {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button {
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+  </style>
+
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Dashboard - Quiz App</h1>
+
+    <form id="questionForm">
+      <label>Question:</label>
+      <textarea id="question" required></textarea>
+
+      <label>Option A:</label>
+      <input type="text" id="optionA" required />
+
+      <label>Option B:</label>
+      <input type="text" id="optionB" required />
+
+      <label>Option C:</label>
+      <input type="text" id="optionC" required />
+
+      <label>Option D:</label>
+      <input type="text" id="optionD" required />
+
+      <label>Correct Answer:</label>
+      <select id="correctAnswer" required>
+        <option value="">Select correct option</option>
+        <option value="A">Option A</option>
+        <option value="B">Option B</option>
+        <option value="C">Option C</option>      </select>
+
+      <button type="submit">Add Question</button>
+    </form>
+
+    <h2>Questions List</h2>
+    <table id="questionsTable">
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>A</th>
+          <th>B</th>
+          <th>C</th>
+         
+          <th>Correct</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const form = document.getElementById("questionForm");
+    const tableBody = document.querySelector("#questionsTable tbody");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const ques = document.getElementById("question").value.trim();
+      const option1 = document.getElementById("optionA").value.trim();
+      const option2 = document.getElementById("optionB").value.trim();
+      const option3 = document.getElementById("optionC").value.trim();
+      const ans = document.getElementById("correctAnswer").value;
+
+      if (!ques || !option1 || !option2 || !option3 || !ans) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const data = {
+        ques: ques,
+        option1: option1,
+        option2: option2,
+        option3: option3,
+        ans: ans
+      };
+
+      try {
+        const response = await fetch("http://localhost:8080/question/add", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to save question");
+        }
+
+        const result = await response.json();
+        console.log("Saved question:", result);
+
+        // Add to table for preview
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+          <td>${ques}</td>
+          <td>${option1}</td>
+          <td>${option2}</td>
+          <td>${option3}</td>
+          <td>${ans}</td>
+        `;
+
+        form.reset();
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+  </script>
+
+</script>
+</body>
+</html>
